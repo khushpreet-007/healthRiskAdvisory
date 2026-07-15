@@ -1,0 +1,19 @@
+{
+  "1": {
+    "name": "Indiranagar",
+    "aqi": 186,
+    "risk": "HIGH",
+    "schools": 6,
+    "hospitals": 2,
+    "elderly": 3
+  },
+
+  "2": {
+    "name": "Whitefield",
+    "aqi": 82,
+    "risk": "LOW",
+    "schools": 5,
+    "hospitals": 1,
+    "elderly": 1
+  }
+}
