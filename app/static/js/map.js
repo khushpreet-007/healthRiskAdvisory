@@ -24,29 +24,42 @@ function getColor(risk) {
     }
 }
 
+const dummyWard = {
+    risk: "HIGH",
+    aqi: 185,
+    schools: 5,
+    hospitals: 2,
+    elderly: 3
+};
+
 fetch("/static/geojson/bengaluru_wards.geojson")
     .then(response => response.json())
     .then(data => {
 
         L.geoJSON(data, {
 
-            style: function(feature) {
+            style: function (feature) {
+
+
 
                 return {
                     color: "#333",
                     weight: 1,
-                    fillColor: getColor("HIGH"),   // Temporary
+                    fillColor: getColor(dummyWard.risk),
                     fillOpacity: 0.6
                 };
 
+
             },
 
-            onEachFeature: function(feature, layer) {
+            onEachFeature: function (feature, layer) {
 
-                layer.on("click", function() {
+                layer.on("click", function () {
 
+                    console.log(dummyWard.aqi);
+                    console.log(dummyWard.schools);
                     console.log(feature.properties);
-                    alert("Ward clicked!");
+                    console.log(dummyWard);
 
                 });
 
@@ -56,3 +69,4 @@ fetch("/static/geojson/bengaluru_wards.geojson")
 
     })
     .catch(error => console.error(error));
+
