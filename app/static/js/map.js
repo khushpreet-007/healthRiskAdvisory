@@ -32,6 +32,7 @@ const dummyWard = {
     elderly: 3
 };
 
+const sidebar = document.getElementById("sidebar");
 fetch("/static/geojson/bengaluru_wards.geojson")
     .then(response => response.json())
     .then(data => {
@@ -39,8 +40,6 @@ fetch("/static/geojson/bengaluru_wards.geojson")
         L.geoJSON(data, {
 
             style: function (feature) {
-
-
 
                 return {
                     color: "#333",
@@ -53,13 +52,16 @@ fetch("/static/geojson/bengaluru_wards.geojson")
             },
 
             onEachFeature: function (feature, layer) {
-
                 layer.on("click", function () {
-
-                    console.log(dummyWard.aqi);
-                    console.log(dummyWard.schools);
-                    console.log(feature.properties);
-                    console.log(dummyWard);
+                    sidebar.innerHTML = `
+                        <h2>${feature.properties.KGISWardName}</h2>
+                        <p><b>Ward No:</b> ${feature.properties.KGISWardNo}</p>
+                        <p><b>AQI:</b> ${dummyWard.aqi}</p>
+                        <p><b>Risk:</b> ${dummyWard.risk}</p>
+                        <p><b>Schools:</b> ${dummyWard.schools}</p>
+                        <p><b>Hospitals:</b> ${dummyWard.hospitals}</p>
+                        <p><b>Elderly Centers:</b> ${dummyWard.elderly}</p>
+                    `;
 
                 });
 
