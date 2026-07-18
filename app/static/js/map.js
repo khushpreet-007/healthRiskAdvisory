@@ -54,6 +54,11 @@ fetch("/static/geojson/bengaluru_wards.geojson")
             onEachFeature: function (feature, layer) {
                 layer.on("click", function () {
 
+                    sidebar.innerHTML = `
+                        <h2>${feature.properties.KGISWardName}</h2>
+                        <p>🤖 Generating AI risk analysis...</p>
+                    `;
+                    
                     fetch("/api/generate-risk-summary", {
                         method: "POST",
                         headers: {
@@ -71,8 +76,7 @@ fetch("/static/geojson/bengaluru_wards.geojson")
 
                      sidebar.innerHTML = `
                     <h2>${feature.properties.KGISWardName}</h2>
-                    <p>🤖 Generating AI risk analysis...</p>
-
+           
                     <div class="risk high">
                         🔴 HIGH RISK
                     </div>
