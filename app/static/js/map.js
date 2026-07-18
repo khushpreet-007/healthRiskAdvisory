@@ -53,8 +53,25 @@ fetch("/static/geojson/bengaluru_wards.geojson")
 
             onEachFeature: function (feature, layer) {
                 layer.on("click", function () {
-                    sidebar.innerHTML = `
+
+                    fetch("/api/generate-risk-summary", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            wardName: feature.properties.KGISWardName,
+                            aqi: dummyWard.aqi,
+                            schools: dummyWard.schools,
+                            hospitals: dummyWard.hospitals,
+                            elderly: dummyWard.elderly
+                        })
+                    }).then(response => response.json())
+                      .then(riskSummary => {
+
+                     sidebar.innerHTML = `
                     <h2>${feature.properties.KGISWardName}</h2>
+                    <p>🤖 Generating AI risk analysis...</p>
 
                     <div class="risk high">
                         🔴 HIGH RISK
@@ -70,8 +87,7 @@ fetch("/static/geojson/bengaluru_wards.geojson")
                     <h3>⚠️ AI Risk Summary</h3>
 
                     <p>
-                        High pollution levels combined with nearby schools
-                        and elderly centers may increase respiratory illness.
+                        ${riskSummary.summary}
                     </p>
 
                     <h3>🛠 One-Click Interventions</h3>
@@ -82,7 +98,13 @@ fetch("/static/geojson/bengaluru_wards.geojson")
 
                     <button>📢 Dispatch Advisory</button>
                 `;
-                });
+
+                                })
+                                .catch(error => {
+                                    console.error(error);
+                                });
+
+                        });
 
             }
 
