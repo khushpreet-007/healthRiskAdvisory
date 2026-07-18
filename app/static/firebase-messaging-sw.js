@@ -11,7 +11,7 @@ firebase.initializeApp({
     apiKey: "AIzaSyAggcDKEzNMq_kNuHslsEYymY9266ylLeg",
     authDomain: "cloud-messaging-1a6fa.firebaseapp.com",
     projectId: "cloud-messaging-1a6fa",
-    appId: "1:818981624218:web:742245211ed05944dec223",
+    appId: "1:818981624218:web:742245211ed05944dec223"
 });
 
 
