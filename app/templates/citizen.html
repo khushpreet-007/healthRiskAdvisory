@@ -36,11 +36,25 @@
         navigator.serviceWorker.register(
             "/static/firebase-messaging-sw.js"
         )
-
-            .then(() => {
+            .then((registration) => {
 
                 console.log(
-                    "Service Worker registered"
+                    "Service worker ready"
+                );
+
+
+                return getToken(messaging, {
+                    vapidKey: "BNdIYjFluwKmDvGloykbc6JGBu-OAkUDWycOT6nv6LQst7WzWCeeR17annrLQl46TIdqSBSXBBe43eQZvU5Dpr0",
+                    serviceWorkerRegistration: registration
+                });
+
+
+            })
+            .then(token => {
+
+                console.log(
+                    "FCM TOKEN:",
+                    token
                 );
 
             });

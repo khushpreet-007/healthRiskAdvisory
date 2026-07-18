@@ -16,5 +16,5 @@ async def home():
     return FileResponse("app/templates/index.html")
 
 @app.get("/citizen")
-async def home():
+async def citizen():
     return FileResponse("app/templates/citizen.html")
