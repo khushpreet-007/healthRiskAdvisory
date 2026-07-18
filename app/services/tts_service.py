@@ -1,12 +1,10 @@
 from google.cloud import texttospeech
 import uuid
 import os
-    from firebase_admin import messaging
+from firebase_admin import messaging
 
 
 class TTSService:
-
-
 
     def send_fcm_notification(
         ward,
@@ -15,7 +13,6 @@ class TTSService:
     ):
 
         for device in devices:
-
             if device["ward"] == ward:
                 notification = messaging.Message(
                     notification=messaging.Notification(
@@ -32,9 +29,7 @@ class TTSService:
                 messaging.send(notification)
 
     def generate_audio(self, text, language):
-
         client = texttospeech.TextToSpeechClient()
-
         language_map = {
             "English": ("en-IN", "en-IN-Standard-B"),
             "Kannada": ("kn-IN", "kn-IN-Standard-A"),
