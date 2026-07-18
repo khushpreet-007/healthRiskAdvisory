@@ -6,6 +6,51 @@ from app.utils.vertex_client import client
 
 class GeminiService:
 
+     def create_public_advisory(
+        self,
+        ward_name,
+        risk_level,
+        summary,
+        target_audience,
+        language
+    ):
+
+        prompt = f"""
+        You are an emergency public health officer.
+
+        Create a short public advisory for citizens.
+
+        Ward Name: {ward_name}
+        Risk Level: {risk_level}
+        Risk Summary: {summary}
+        Target Audience:
+        {", ".join(target_audience)}
+
+        Requirements:
+        - Keep the advisory under 80 words.
+        - Use a calm, reassuring tone.
+        - Tell people what actions to take.
+        - Return ONLY valid JSON.
+        - Do NOT include markdown.
+
+        Return:
+        {{
+            "language": "English",
+            "advisory": ""
+        }}
+        """
+
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                response_mime_type="application/json"
+            )
+        )
+
+        response_text = response.text.strip()
+        return json.loads(response_text)
+
     def generate_risk_summary(
         self,
         ward_name,

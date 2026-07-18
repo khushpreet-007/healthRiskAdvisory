@@ -31,8 +31,9 @@ const dummyWard = {
     hospitals: 2,
     elderly: 3
 };
-
+let selectedWard = null;
 const sidebar = document.getElementById("sidebar");
+
 fetch("/static/geojson/bengaluru_wards.geojson")
     .then(response => response.json())
     .then(data => {
@@ -59,6 +60,10 @@ fetch("/static/geojson/bengaluru_wards.geojson")
                         <p>🤖 Generating AI risk analysis...</p>
                     `;
 
+                    document
+                        .getElementById("dispatch-btn")
+                        .addEventListener("click", dispatchAdvisory);
+
                     fetch("/api/generate-risk-summary", {
                         method: "POST",
                         headers: {
@@ -72,9 +77,16 @@ fetch("/static/geojson/bengaluru_wards.geojson")
                             elderly: dummyWard.elderly
                         })
                     }).then(response => response.json())
-                      .then(riskSummary => {
+                        .then(riskSummary => {
+                            selectedWard = {
+                                wardName: feature.properties.KGISWardName,
+                                riskLevel: riskSummary.riskLevel,
+                                summary: riskSummary.summary,
+                                targetAudience: riskSummary.targetAudience,
+                                language: "English"
+                            };
 
-                     sidebar.innerHTML = `
+                            sidebar.innerHTML = `
                     <h2>${feature.properties.KGISWardName}</h2>
            
                     <div class="risk high">
@@ -109,15 +121,16 @@ fetch("/static/geojson/bengaluru_wards.geojson")
 
                     <button>🚦 Redirect Traffic</button>
 
-                    <button >📢 Dispatch Advisory</button>
+                    <button id="dispatch-btn">📢 Dispatch Advisory</button>
+                  
                 `;
 
-                                })
-                                .catch(error => {
-                                    console.error(error);
-                                });
-
+                        })
+                        .catch(error => {
+                            console.error(error);
                         });
+
+                });
 
             }
 
@@ -126,3 +139,57 @@ fetch("/static/geojson/bengaluru_wards.geojson")
     })
     .catch(error => console.error(error));
 
+function dispatchAdvisory() {
+
+    if (!selectedWard) {
+        alert("Please select a ward first.");
+        return;
+    }
+
+    const button = document.getElementById("dispatch-btn");
+
+    button.disabled = true;
+    button.innerText = "⏳ Dispatching...";
+
+    fetch("/api/dispatch-advisory", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(selectedWard)
+    })
+        .then(response => {
+
+            if (!response.ok) {
+                throw new Error("Failed to dispatch advisory.");
+            }
+
+            return response.json();
+        })
+        .then(data => {
+
+            console.log(data);
+
+            // For now just show the translated advisory
+            alert(data.message);
+
+            // Later we'll replace this with:
+            // const audio = new Audio(data.audioUrl);
+            // audio.play();
+
+        })
+        .catch(error => {
+
+            console.error(error);
+
+            alert("Unable to dispatch advisory.");
+
+        })
+        .finally(() => {
+
+            button.disabled = false;
+            button.innerText = "📢 Dispatch Advisory";
+
+        });
+
+}

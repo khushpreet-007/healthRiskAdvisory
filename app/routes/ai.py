@@ -5,6 +5,24 @@ from app.services.gemini_service import geminiService
 
 router = APIRouter()
 
+class DispatchRequest(BaseModel):
+    wardName: str
+    riskLevel: str
+    summary: str
+    targetAudience: list[str]
+    language:str
+
+@router.post("/api/dispatch-advisory")
+async def dispatch_advisory(request: DispatchRequest):
+
+    return geminiService.create_public_advisory(
+        request.wardName,
+        request.riskLevel,
+        request.summary,
+        request.targetAudience,
+        request.language,
+    )
+
 
 class RiskRequest(BaseModel):
     wardName: str
@@ -12,6 +30,7 @@ class RiskRequest(BaseModel):
     schools: int
     hospitals: int
     elderly: int
+
 
 @router.post("/api/generate-risk-summary")
 async def generate_risk_summary(request: RiskRequest):
