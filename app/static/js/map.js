@@ -60,10 +60,6 @@ fetch("/static/geojson/bengaluru_wards.geojson")
                         <p>🤖 Generating AI risk analysis...</p>
                     `;
 
-                    document
-                        .getElementById("dispatch-btn")
-                        .addEventListener("click", dispatchAdvisory);
-
                     fetch("/api/generate-risk-summary", {
                         method: "POST",
                         headers: {
@@ -124,6 +120,9 @@ fetch("/static/geojson/bengaluru_wards.geojson")
                     <button id="dispatch-btn">📢 Dispatch Advisory</button>
                   
                 `;
+                            document
+                                .getElementById("dispatch-btn")
+                                .addEventListener("click", dispatchAdvisory);
 
                         })
                         .catch(error => {
