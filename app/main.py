@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
-from routes.ai import router
+from .routes.ai import router
 
 app = FastAPI()
 
