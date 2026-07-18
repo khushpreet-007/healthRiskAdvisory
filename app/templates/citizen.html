@@ -1,0 +1,114 @@
+<script type="module">
+
+    import { initializeApp }
+        from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+
+    import {
+        getMessaging,
+        getToken,
+        onMessage
+    }
+        from "https://www.gstatic.com/firebasejs/12.16.0/firebase-messaging.js";
+
+
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyAggcDKEzNMq_kNuHslsEYymY9266ylLeg",
+        authDomain: "cloud-messaging-1a6fa.firebaseapp.com",
+        projectId: "cloud-messaging-1a6fa",
+        storageBucket: "cloud-messaging-1a6fa.firebasestorage.app",
+        messagingSenderId: "818981624218",
+        appId: "1:818981624218:web:742245211ed05944dec223",
+        measurementId: "G-70F3JLD59N"
+    };
+
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+
+    // Initialize Messaging
+    const messaging = getMessaging(app);
+
+
+    if ("serviceWorker" in navigator) {
+
+
+        navigator.serviceWorker.register(
+            "/static/firebase-messaging-sw.js"
+        )
+
+            .then(() => {
+
+                console.log(
+                    "Service Worker registered"
+                );
+
+            });
+
+    }
+    // Ask notification permission
+
+    Notification.requestPermission()
+
+        .then(permission => {
+            if (permission === "granted") {
+                console.log(
+                    "Notification permission granted"
+                );
+
+                return getToken(messaging, {
+                    vapidKey: "BNdIYjFluwKmDvGloykbc6JGBu-OAkUDWycOT6nv6LQst7WzWCeeR17annrLQl46TIdqSBSXBBe43eQZvU5Dpr0"
+                });
+
+            }
+
+
+        })
+
+        .then(token => {
+
+            if (token) {
+                console.log(
+                    "FCM TOKEN:",
+                    token
+                );
+
+                // Send token to backend later
+
+            }
+
+
+        })
+
+        .catch(error => {
+
+            console.error(
+                "FCM Error:",
+                error
+            );
+
+        });
+
+
+    // Receive foreground notifications
+
+    onMessage(
+        messaging,
+        (payload) => {
+
+            console.log(
+                "Message received:",
+                payload
+            );
+
+
+            alert(
+                payload.notification.body
+            );
+
+
+        }
+    );
+
+
+</script>
