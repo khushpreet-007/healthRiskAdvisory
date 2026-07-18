@@ -103,7 +103,7 @@ fetch("/static/geojson/bengaluru_wards.geojson")
 
                     <button>🚦 Redirect Traffic</button>
 
-                    <button>📢 Dispatch Advisory</button>
+                    <button >📢 Dispatch Advisory</button>
                 `;
 
                                 })

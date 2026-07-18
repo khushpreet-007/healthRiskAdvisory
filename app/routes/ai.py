@@ -14,6 +14,7 @@ class RiskRequest(BaseModel):
     elderly: int
 
 
+
 @router.post("/api/generate-risk-summary")
 async def generate_risk_summary(request: RiskRequest):
 

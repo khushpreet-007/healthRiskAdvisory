@@ -1,6 +1,8 @@
 from google.genai import types
-from app.utils.vertex_client import client
 import json
+
+from app.utils.vertex_client import client
+
 
 class GeminiService:
 
@@ -13,7 +15,7 @@ class GeminiService:
         elderly
     ):
 
-       prompt = f"""
+        prompt = f"""
         You are an environmental health advisor helping city administrators respond to air pollution emergencies.
 
         Ward Name: {ward_name}
@@ -45,12 +47,15 @@ class GeminiService:
         ]
         }}
         """
+
         response = client.models.generate_content(
             model="gemini-2.5-flash",
             contents=prompt
         )
+
         response_text = response.text.strip()
 
         return json.loads(response_text)
+
 
 geminiService = GeminiService()
