@@ -50,11 +50,16 @@ class GeminiService:
 
         response = client.models.generate_content(
             model="gemini-2.5-flash",
-            contents=prompt
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                response_mime_type="application/json"
+            )
         )
 
         response_text = response.text.strip()
-
+        print("Response:", response_text, flush=True)
+        if not response_text:
+            raise ValueError("Gemini returned an empty response.")
         return json.loads(response_text)
 
 
