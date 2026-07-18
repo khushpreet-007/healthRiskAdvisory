@@ -2,6 +2,8 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 
 from app.services.gemini_service import geminiService
+from app.services.tts_service import ttsService
+
 
 router = APIRouter()
 
