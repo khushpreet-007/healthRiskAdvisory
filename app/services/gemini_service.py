@@ -6,7 +6,7 @@ from app.utils.vertex_client import client
 
 class GeminiService:
 
-     def create_public_advisory(
+    def create_public_advisory(
         self,
         ward_name,
         risk_level,
@@ -16,29 +16,29 @@ class GeminiService:
     ):
 
         prompt = f"""
-        You are an emergency public health officer.
+You are an emergency public health officer.
 
-        Create a short public advisory for citizens.
+Create a short public advisory for citizens.
 
-        Ward Name: {ward_name}
-        Risk Level: {risk_level}
-        Risk Summary: {summary}
-        Target Audience:
-        {", ".join(target_audience)}
+Ward Name: {ward_name}
+Risk Level: {risk_level}
+Risk Summary: {summary}
+Target Audience: {", ".join(target_audience)}
+Language: {language}
 
-        Requirements:
-        - Keep the advisory under 80 words.
-        - Use a calm, reassuring tone.
-        - Tell people what actions to take.
-        - Return ONLY valid JSON.
-        - Do NOT include markdown.
+Requirements:
+- Keep the advisory under 80 words.
+- Use a calm, reassuring tone.
+- Tell people what actions to take.
+- Return ONLY valid JSON.
+- Do NOT include markdown.
 
-        Return:
-        {{
-            "language": "English",
-            "advisory": ""
-        }}
-        """
+Return:
+{{
+    "language": "{language}",
+    "advisory": ""
+}}
+"""
 
         response = client.models.generate_content(
             model="gemini-2.5-flash",
@@ -49,6 +49,10 @@ class GeminiService:
         )
 
         response_text = response.text.strip()
+
+        if not response_text:
+            raise ValueError("Gemini returned an empty response.")
+
         return json.loads(response_text)
 
     def generate_risk_summary(
@@ -61,37 +65,37 @@ class GeminiService:
     ):
 
         prompt = f"""
-        You are an environmental health advisor helping city administrators respond to air pollution emergencies.
+You are an environmental health advisor helping city administrators respond to air pollution emergencies.
 
-        Ward Name: {ward_name}
-        AQI: {aqi}
-        Schools: {schools}
-        Hospitals: {hospitals}
-        Elderly Centers: {elderly}
+Ward Name: {ward_name}
+AQI: {aqi}
+Schools: {schools}
+Hospitals: {hospitals}
+Elderly Centers: {elderly}
 
-        Based on the above data:
+Based on the above data:
 
-        1. Determine the risk level (LOW, MEDIUM, HIGH).
-        2. Write a concise 2-3 sentence summary explaining why this ward is vulnerable.
-        3. Recommend exactly three immediate interventions.
-        4. Identify the target audiences who should receive the alert.
+1. Determine the risk level (LOW, MEDIUM, HIGH).
+2. Write a concise 2-3 sentence summary explaining why this ward is vulnerable.
+3. Recommend exactly three immediate interventions.
+4. Identify the target audiences who should receive the alert.
 
-        Return ONLY valid JSON.
+Return ONLY valid JSON.
 
-        {{
-        "riskLevel": "",
-        "summary": "",
-        "recommendedActions": [
-            "",
-            "",
-            ""
-        ],
-        "targetAudience": [
-            "",
-            ""
-        ]
-        }}
-        """
+{{
+    "riskLevel": "",
+    "summary": "",
+    "recommendedActions": [
+        "",
+        "",
+        ""
+    ],
+    "targetAudience": [
+        "",
+        ""
+    ]
+}}
+"""
 
         response = client.models.generate_content(
             model="gemini-2.5-flash",
@@ -102,9 +106,10 @@ class GeminiService:
         )
 
         response_text = response.text.strip()
-        print("Response:", response_text, flush=True)
+
         if not response_text:
             raise ValueError("Gemini returned an empty response.")
+
         return json.loads(response_text)
 
 
