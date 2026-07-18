@@ -17,7 +17,6 @@ class DispatchRequest(BaseModel):
 @router.post("/api/dispatch-advisory")
 async def dispatch_advisory(request: DispatchRequest):
 
-
     advisory =  geminiService.create_public_advisory(
         request.wardName,
         request.riskLevel,
@@ -29,6 +28,12 @@ async def dispatch_advisory(request: DispatchRequest):
     audio_url = ttsService.generate_audio(
         advisory["advisory"],
         advisory["language"]
+    )
+
+    ttsService.send_fcm_notification(
+        request.wardName,
+        advisory["advisory"],
+        audio_url
     )
 
     return {

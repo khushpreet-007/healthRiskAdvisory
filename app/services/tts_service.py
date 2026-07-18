@@ -1,9 +1,35 @@
 from google.cloud import texttospeech
 import uuid
 import os
+    from firebase_admin import messaging
 
 
 class TTSService:
+
+
+
+    def send_fcm_notification(
+        ward,
+        message,
+        audio_url
+    ):
+
+        for device in devices:
+
+            if device["ward"] == ward:
+                notification = messaging.Message(
+                    notification=messaging.Notification(
+                        title="🚨 AQI Alert",
+                        body=message
+                    ),
+
+                    data={
+                        "audioUrl":audio_url,
+                        "ward":ward
+                    },
+                    token=device["token"]
+                )
+                messaging.send(notification)
 
     def generate_audio(self, text, language):
 

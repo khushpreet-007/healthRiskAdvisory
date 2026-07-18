@@ -1,39 +1,38 @@
 importScripts(
-'https://www.gstatic.com/firebasejs/12.16.0/firebase-app-compat.js'
+    'https://www.gstatic.com/firebasejs/12.16.0/firebase-app-compat.js'
 );
 
 importScripts(
-'https://www.gstatic.com/firebasejs/12.16.0/firebase-messaging-compat.js'
+    'https://www.gstatic.com/firebasejs/12.16.0/firebase-messaging-compat.js'
 );
 
 
 firebase.initializeApp({
-    apiKey: "xx",
+    apiKey: "AIzaSyAggcDKEzNMq_kNuHslsEYymY9266ylLeg",
     authDomain: "cloud-messaging-1a6fa.firebaseapp.com",
     projectId: "cloud-messaging-1a6fa",
-    messagingSenderId: "xxx",
-    appId: "1:xxx:web:xxx"
+    appId: "1:818981624218:web:742245211ed05944dec223",
 });
 
 
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage(
-(payload)=>{
+    (payload) => {
 
 
-    self.registration.showNotification(
+        self.registration.showNotification(
 
-        payload.notification.title,
+            payload.notification.title,
 
-        {
+            {
 
-        body:
-        payload.notification.body
+                body:
+                    payload.notification.body
 
-        }
+            }
 
-    );
+        );
 
 
-});
+    });

@@ -105,24 +105,13 @@
 
 
     // Receive foreground notifications
-
     onMessage(
         messaging,
-        (payload) => {
-
-            console.log(
-                "Message received:",
-                payload
-            );
-
-
-            alert(
-                payload.notification.body
-            );
-
-
+        payload => {
+            console.log(payload);
+            const audioUrl =  payload.data.audioUrl;
+            const audio = new Audio(audioUrl);
+            audio.play();
         }
     );
-
-
 </script>

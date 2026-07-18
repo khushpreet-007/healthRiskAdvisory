@@ -171,7 +171,7 @@ function dispatchAdvisory() {
 
             // For now just show the translated advisory
             const audio = new Audio(data.audioUrl);
-            audio.play();
+          //  audio.play();
 
             // Later we'll replace this with:
             // const audio = new Audio(data.audioUrl);
