@@ -54,15 +54,34 @@ fetch("/static/geojson/bengaluru_wards.geojson")
             onEachFeature: function (feature, layer) {
                 layer.on("click", function () {
                     sidebar.innerHTML = `
-                        <h2>${feature.properties.KGISWardName}</h2>
-                        <p><b>Ward No:</b> ${feature.properties.KGISWardNo}</p>
-                        <p><b>AQI:</b> ${dummyWard.aqi}</p>
-                        <p><b>Risk:</b> ${dummyWard.risk}</p>
-                        <p><b>Schools:</b> ${dummyWard.schools}</p>
-                        <p><b>Hospitals:</b> ${dummyWard.hospitals}</p>
-                        <p><b>Elderly Centers:</b> ${dummyWard.elderly}</p>
-                    `;
+                    <h2>${feature.properties.KGISWardName}</h2>
 
+                    <div class="risk high">
+                        🔴 HIGH RISK
+                    </div>
+
+                    <div class="card">
+                        <div><b>AQI</b> : ${dummyWard.aqi}</div>
+                        <div><b>Schools</b> : ${dummyWard.schools}</div>
+                        <div><b>Hospitals</b> : ${dummyWard.hospitals}</div>
+                        <div><b>Elderly Centers</b> : ${dummyWard.elderly}</div>
+                    </div>
+
+                    <h3>⚠️ AI Risk Summary</h3>
+
+                    <p>
+                        High pollution levels combined with nearby schools
+                        and elderly centers may increase respiratory illness.
+                    </p>
+
+                    <h3>🛠 One-Click Interventions</h3>
+
+                    <button>🚧 Halt Construction</button>
+
+                    <button>🚦 Redirect Traffic</button>
+
+                    <button>📢 Dispatch Advisory</button>
+                `;
                 });
 
             }
