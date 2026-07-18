@@ -14,3 +14,7 @@ app.include_router(router)
 @app.get("/")
 async def home():
     return FileResponse("app/templates/index.html")
+
+@app.get("/citizen")
+async def home():
+    return FileResponse("app/templates/citizen.html")
