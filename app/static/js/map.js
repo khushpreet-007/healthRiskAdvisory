@@ -170,7 +170,8 @@ function dispatchAdvisory() {
             console.log(data);
 
             // For now just show the translated advisory
-            alert(data.message);
+            const audio = new Audio(data.audioUrl);
+            audio.play();
 
             // Later we'll replace this with:
             // const audio = new Audio(data.audioUrl);

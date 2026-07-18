@@ -15,13 +15,25 @@ class DispatchRequest(BaseModel):
 @router.post("/api/dispatch-advisory")
 async def dispatch_advisory(request: DispatchRequest):
 
-    return geminiService.create_public_advisory(
+
+    advisory =  geminiService.create_public_advisory(
         request.wardName,
         request.riskLevel,
         request.summary,
         request.targetAudience,
         request.language,
     )
+    
+    audio_url = ttsService.generate_audio(
+        advisory["advisory"],
+        advisory["language"]
+    )
+
+    return {
+        "language": advisory["language"],
+        "advisory": advisory["advisory"],
+        "audioUrl": audio_url
+    }
 
 
 class RiskRequest(BaseModel):
