@@ -89,12 +89,18 @@ fetch("/static/geojson/bengaluru_wards.geojson")
                     </div>
 
                     <h3>⚠️ AI Risk Summary</h3>
-
                     <p>
-                       RiskLevel: ${riskSummary.riskLevel}
-                       RecommendedActions: ${riskSummary.recommendedActions[0]}
-                       RecommendedActions: ${riskSummary.recommendedActions[1]}
-                       TargetAudience: ${riskSummary.targetAudience[20]}
+                    <b>Risk:</b> ${riskSummary.riskLevel}<br><br>
+
+                    ${riskSummary.summary}<br><br>
+
+                    <b>Recommended Actions</b><br>
+                    • ${riskSummary.recommendedActions[0]}<br>
+                    • ${riskSummary.recommendedActions[1]}<br>
+                    • ${riskSummary.recommendedActions[2]}<br><br>
+
+                    <b>Target Audience</b><br>
+                    ${riskSummary.targetAudience.join(", ")}
                     </p>
 
                     <h3>🛠 One-Click Interventions</h3>
