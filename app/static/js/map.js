@@ -58,7 +58,7 @@ fetch("/static/geojson/bengaluru_wards.geojson")
                         <h2>${feature.properties.KGISWardName}</h2>
                         <p>🤖 Generating AI risk analysis...</p>
                     `;
-                    
+
                     fetch("/api/generate-risk-summary", {
                         method: "POST",
                         headers: {
@@ -91,7 +91,10 @@ fetch("/static/geojson/bengaluru_wards.geojson")
                     <h3>⚠️ AI Risk Summary</h3>
 
                     <p>
-                        ${riskSummary.summary}
+                       RiskLevel: ${riskSummary.riskLevel}
+                       RecommendedActions: ${riskSummary.recommendedActions[0]}
+                       RecommendedActions: ${riskSummary.recommendedActions[1]}
+                       TargetAudience: ${riskSummary.targetAudience[20]}
                     </p>
 
                     <h3>🛠 One-Click Interventions</h3>
