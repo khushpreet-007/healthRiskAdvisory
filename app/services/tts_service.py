@@ -7,6 +7,7 @@ from firebase_admin import messaging
 class TTSService:
 
     def send_fcm_notification(
+        self,
         ward,
         message,
         audio_url

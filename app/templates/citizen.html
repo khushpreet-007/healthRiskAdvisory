@@ -52,64 +52,42 @@
             })
             .then(token => {
 
-                console.log(
-                    "FCM TOKEN:",
-                    token
-                );
+                if (!token) {
+                    console.error("No FCM token received.");
+                    return;
+                }
 
-            });
+                console.log("FCM TOKEN:", token);
 
-    }
-    // Ask notification permission
-
-    Notification.requestPermission()
-
-        .then(permission => {
-            if (permission === "granted") {
-                console.log(
-                    "Notification permission granted"
-                );
-
-                return getToken(messaging, {
-                    vapidKey: "BNdIYjFluwKmDvGloykbc6JGBu-OAkUDWycOT6nv6LQst7WzWCeeR17annrLQl46TIdqSBSXBBe43eQZvU5Dpr0"
+                return fetch("/api/register-device", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        token,
+                        ward: "144",
+                        role: "elderly"
+                    })
                 });
 
-            }
+            })
+            .then(response => response?.json())
+            .then(data => {
+                if (data) {
+                    console.log("Device registered:", data);
+                }
+            })
+            .catch(console.error);
 
-
-        })
-
-        .then(token => {
-
-            if (token) {
-                console.log(
-                    "FCM TOKEN:",
-                    token
-                );
-
-                // Send token to backend later
-
-            }
-
-
-        })
-
-        .catch(error => {
-
-            console.error(
-                "FCM Error:",
-                error
-            );
-
-        });
-
+    }
 
     // Receive foreground notifications
     onMessage(
         messaging,
         payload => {
             console.log(payload);
-            const audioUrl =  payload.data.audioUrl;
+            const audioUrl = payload.data.audioUrl;
             const audio = new Audio(audioUrl);
             audio.play();
         }
