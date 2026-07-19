@@ -1,31 +1,46 @@
-function registerDevice() {
+let fcmToken = null;
+let latestAudio = null;
 
-    const ward = document.getElementById("ward").value;
-    const role = document.getElementById("role").value;
 
-    fetch("/api/register-device", {
+async function registerDevice(){
 
-        method: "POST",
+    if(!fcmToken){
+        alert("Please wait, notification setup is not completed");
+        return;
+    }
 
-        headers: {
-            "Content-Type": "application/json"
-        },
 
-        body: JSON.stringify({
+    const ward =
+        document.getElementById("ward").value;
 
-            token: fcmToken,
-            ward,
-            role
 
-        })
+    const role =
+        document.getElementById("role").value;
 
-    })
-    .then(r => r.json())
-    .then(() => {
 
-        document.getElementById("status").innerHTML =
-            `🟢 Registered for <b>${ward}</b> as <b>${role}</b>`;
+    const response = await fetch(
+        "/api/register-device",
+        {
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+                token:fcmToken,
+                ward:ward,
+                role:role
+            })
+        }
+    );
 
-    });
+
+    const data = await response.json();
+
+
+    console.log(data);
+
+
+    document.getElementById("status").innerHTML =
+        "🟢 Registered for "+ward+" alerts";
 
 }
