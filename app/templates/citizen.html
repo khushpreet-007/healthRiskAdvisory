@@ -26,8 +26,11 @@
         <option value="student">Student</option>
     </select>
 
+    <button id="registerBtn">
+        Register for Alerts
+    </button>
     <div id="status" class="status">
-        🟢 Connected to Emergency Alerts
+        🟡 Not registered
     </div>
 
     <div id="alert-card" class="card">
@@ -41,7 +44,8 @@
     </div>
 
     <script type="module">
-
+        let fcmToken = null;
+        let latestAudio = null;
         import { initializeApp }
             from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 
@@ -92,6 +96,7 @@
 
 
                 })
+
                 .then(token => {
 
                     if (!token) {
@@ -99,32 +104,13 @@
                         return;
                     }
 
-                    console.log("FCM TOKEN:", token);
-                    const ward = document.getElementById("ward").value;
-                    const role = document.getElementById("role").value;
-                    return fetch("/api/register-device", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            token,
-                            ward,
-                            role
-                        })
-                    });
+                    fcmToken = token;
 
-                })
-                .then(response => response?.json())
-                .then(data => {
-                    if (data) {
-                        console.log("Device registered:", data);
-                    }
-                })
-                .catch(console.error);
+                    console.log("FCM TOKEN:", token);
+
+                });
 
         }
-        let latestAudio = null;
         // Receive foreground notifications
         onMessage(messaging, payload => {
 
@@ -151,7 +137,10 @@
                 });
 
         });
+        document.getElementById("registerBtn").addEventListener("click", registerDevice);
+
     </script>
+    <script src="/static/js/script.js"></script>
 
 </body>
 
