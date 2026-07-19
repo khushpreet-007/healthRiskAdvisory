@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from app.routes.notification import router as notification_router
+from app.routes.ward import router as ward_router
 
 
 from .routes.ai import router
@@ -12,7 +13,7 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 app.include_router(router)
 app.include_router(notification_router)
-
+app.include_router(ward_router)
 
 @app.get("/")
 async def home():

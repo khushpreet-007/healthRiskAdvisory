@@ -24,16 +24,9 @@ function getColor(risk) {
     }
 }
 
-const dummyWard = {
-    risk: "HIGH",
-    aqi: 185,
-    schools: 5,
-    hospitals: 2,
-    elderly: 3
-};
+
 let selectedWard = null;
 const sidebar = document.getElementById("sidebar");
-
 
 fetch("/static/geojson/bengaluru_wards.geojson")
     .then(response => response.json())
@@ -46,89 +39,204 @@ fetch("/static/geojson/bengaluru_wards.geojson")
                 return {
                     color: "#333",
                     weight: 1,
-                    fillColor: getColor(dummyWard.risk),
+                    fillColor: getColor("MEDIUM"),
                     fillOpacity: 0.6
                 };
-
 
             },
 
             onEachFeature: function (feature, layer) {
+
                 layer.on("click", function () {
 
+                    const wardName = feature.properties.KGISWardName;
+
+
                     sidebar.innerHTML = `
-                        <h2>${feature.properties.KGISWardName}</h2>
-                        <p>🤖 Generating AI risk analysis...</p>
+                        <h2>${wardName}</h2>
+                        <p>🤖 Fetching ward data...</p>
                     `;
 
-                    fetch("/api/generate-risk-summary", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            wardName: feature.properties.KGISWardName,
-                            aqi: dummyWard.aqi,
-                            schools: dummyWard.schools,
-                            hospitals: dummyWard.hospitals,
-                            elderly: dummyWard.elderly
+
+                    // Step 1: Fetch real ward data
+                    fetch(`/api/ward/${encodeURIComponent(wardName)}`)
+                        .then(response => response.json())
+                        .then(wardData => {
+
+
+                            // Step 2: Generate AI risk
+                            return fetch("/api/generate-risk-summary", {
+
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+
+                                body: JSON.stringify({
+
+                                    wardName: wardName,
+
+                                    aqi: wardData.aqi,
+
+                                    schools: wardData.schools,
+
+                                    hospitals: wardData.hospitals,
+
+                                    elderly: wardData.elderly
+
+                                })
+
+                            })
+                                .then(response => response.json())
+                                .then(riskSummary => {
+
+
+                                    selectedWard = {
+
+                                        wardName: wardName,
+
+                                        riskLevel: riskSummary.riskLevel,
+
+                                        summary: riskSummary.summary,
+
+                                        targetAudience: riskSummary.targetAudience,
+
+                                        language: "English"
+
+                                    };
+
+
+                                    sidebar.innerHTML = `
+
+                                <h2>${wardName}</h2>
+
+
+                                <div class="risk ${riskSummary.riskLevel.toLowerCase()}">
+
+                                    ${riskSummary.riskLevel === "HIGH"
+                                            ? "🔴 HIGH RISK"
+                                            : riskSummary.riskLevel === "MEDIUM"
+                                                ? "🟠 MEDIUM RISK"
+                                                : "🟢 LOW RISK"
+                                        }
+
+                                </div>
+
+
+                                <div class="card">
+
+                                    <div>
+                                    <b>AQI</b> : ${wardData.aqi}
+                                    </div>
+
+                                    <div>
+                                    <b>Schools</b> : ${wardData.schools}
+                                    </div>
+
+
+                                    <div>
+                                    <b>Hospitals</b> : ${wardData.hospitals}
+                                    </div>
+
+
+                                    <div>
+                                    <b>Elderly Centers</b> : ${wardData.elderly}
+                                    </div>
+
+                                </div>
+
+
+
+                                <h3>⚠️ AI Risk Summary</h3>
+
+
+                                <p>
+
+                                <b>Risk:</b> 
+                                ${riskSummary.riskLevel}
+
+                                <br><br>
+
+
+                                ${riskSummary.summary}
+
+
+                                <br><br>
+
+
+                                <b>Recommended Actions</b>
+
+                                <br>
+
+                                • ${riskSummary.recommendedActions[0]}
+
+                                <br>
+
+                                • ${riskSummary.recommendedActions[1]}
+
+                                <br>
+
+                                • ${riskSummary.recommendedActions[2]}
+
+
+                                <br><br>
+
+
+                                <b>Target Audience</b>
+
+                                <br>
+
+                                ${riskSummary.targetAudience.join(", ")}
+
+
+                                </p>
+
+
+                                <h3>🛠 One-Click Interventions</h3>
+
+
+                                <button>
+                                    🚧 Halt Construction
+                                </button>
+
+
+                                <button>
+                                    🚦 Redirect Traffic
+                                </button>
+
+
+                                <button id="dispatch-btn">
+                                    📢 Dispatch Advisory
+                                </button>
+
+                                `;
+
+
+                                    document
+                                        .getElementById("dispatch-btn")
+                                        .addEventListener(
+                                            "click",
+                                            dispatchAdvisory
+                                        );
+
+
+                                });
+
+
                         })
-                    }).then(response => response.json())
-                        .then(riskSummary => {
-                            selectedWard = {
-                                wardName: feature.properties.KGISWardName,
-                                riskLevel: riskSummary.riskLevel,
-                                summary: riskSummary.summary,
-                                targetAudience: riskSummary.targetAudience,
-                                language: "English"
-                            };
+
+                        .catch(error => {
+
+                            console.error(error);
 
                             sidebar.innerHTML = `
-                    <h2>${feature.properties.KGISWardName}</h2>
-           
-                    <div class="risk high">
-                        🔴 HIGH RISK
-                    </div>
+                                <h2>${wardName}</h2>
+                                <p>❌ Failed to load ward data</p>
+                            `;
 
-                    <div class="card">
-                        <div><b>AQI</b> : ${dummyWard.aqi}</div>
-                        <div><b>Schools</b> : ${dummyWard.schools}</div>
-                        <div><b>Hospitals</b> : ${dummyWard.hospitals}</div>
-                        <div><b>Elderly Centers</b> : ${dummyWard.elderly}</div>
-                    </div>
-
-                    <h3>⚠️ AI Risk Summary</h3>
-                    <p>
-                    <b>Risk:</b> ${riskSummary.riskLevel}<br><br>
-
-                    ${riskSummary.summary}<br><br>
-
-                    <b>Recommended Actions</b><br>
-                    • ${riskSummary.recommendedActions[0]}<br>
-                    • ${riskSummary.recommendedActions[1]}<br>
-                    • ${riskSummary.recommendedActions[2]}<br><br>
-
-                    <b>Target Audience</b><br>
-                    ${riskSummary.targetAudience.join(", ")}
-                    </p>
-
-                    <h3>🛠 One-Click Interventions</h3>
-
-                    <button>🚧 Halt Construction</button>
-
-                    <button>🚦 Redirect Traffic</button>
-
-                    <button id="dispatch-btn">📢 Dispatch Advisory</button>
-                  
-                `;
-                            document
-                                .getElementById("dispatch-btn")
-                                .addEventListener("click", dispatchAdvisory);
-
-                        })
-                        .catch(error => {
-                            console.error(error);
                         });
+
 
                 });
 
@@ -137,6 +245,7 @@ fetch("/static/geojson/bengaluru_wards.geojson")
         }).addTo(map);
 
     })
+
     .catch(error => console.error(error));
 
 function dispatchAdvisory() {
@@ -172,7 +281,8 @@ function dispatchAdvisory() {
 
             // For now just show the translated advisory
             const audio = new Audio(data.audioUrl);
-          //  audio.play();
+            alert('Dispatch send Successfully 🟢');
+            //  audio.play();
 
             // Later we'll replace this with:
             // const audio = new Audio(data.audioUrl);

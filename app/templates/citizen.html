@@ -109,6 +109,14 @@
                 });
 
         }
+        document
+            .getElementById("ward")
+            .addEventListener(
+                "change",
+                () => {
+                    document.getElementById("status").innerHTML =
+                        "🟡 Ward changed. Register again";
+                });
         // Receive foreground notifications
         onMessage(messaging, payload => {
 
@@ -137,7 +145,7 @@
         });
         document.getElementById("registerBtn").addEventListener("click", registerDevice);
 
-        
+
     </script>
     <script src="/static/js/script.js"></script>
 
