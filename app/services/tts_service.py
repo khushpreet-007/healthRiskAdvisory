@@ -1,8 +1,12 @@
 from google.cloud import texttospeech
 import uuid
 import os
+from app.utils import firebase_client
 from firebase_admin import messaging
+
 from app.routes.notification import devices
+
+
 
 class TTSService:
 
