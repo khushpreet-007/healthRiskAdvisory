@@ -13,21 +13,34 @@ class TTSService:
         audio_url
     ):
 
+        print("Dispatch ward:", ward, flush=True)
+        print("Registered devices:", devices, flush=True)
+
         for device in devices:
+
+            print(
+                f'Comparing "{device["ward"]}" with "{ward}"',
+                flush=True
+            )
+
             if device["ward"] == ward:
+
+                print("Matched device!", flush=True)
+
                 notification = messaging.Message(
                     notification=messaging.Notification(
                         title="🚨 AQI Alert",
                         body=message
                     ),
-
                     data={
-                        "audioUrl":audio_url,
-                        "ward":ward
+                        "audioUrl": audio_url,
+                        "ward": ward
                     },
                     token=device["token"]
                 )
-                messaging.send(notification)
+
+                result = messaging.send(notification)
+                print(result, flush=True)
 
     def generate_audio(self, text, language):
         client = texttospeech.TextToSpeechClient()

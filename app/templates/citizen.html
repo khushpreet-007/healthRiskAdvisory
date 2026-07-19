@@ -1,3 +1,9 @@
+<select id="ward">
+    <option value="1">Kempegowda Ward</option>
+    <option value="144">Basaveshwara Nagar</option>
+    <option value="145">Test</option>
+</select>
+
 <script type="module">
 
     import { initializeApp }
@@ -58,7 +64,7 @@
                 }
 
                 console.log("FCM TOKEN:", token);
-
+                const ward = document.getElementById("ward").value;
                 return fetch("/api/register-device", {
                     method: "POST",
                     headers: {
@@ -66,7 +72,7 @@
                     },
                     body: JSON.stringify({
                         token,
-                        ward: "144",
+                        ward,
                         role: "elderly"
                     })
                 });
