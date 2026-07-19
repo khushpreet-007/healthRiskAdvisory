@@ -7,11 +7,12 @@ importScripts(
 );
 
 
+
 firebase.initializeApp({
-    apiKey: "AIzaSyAggcDKEzNMq_kNuHslsEYymY9266ylLeg",
-    authDomain: "cloud-messaging-1a6fa.firebaseapp.com",
-    projectId: "cloud-messaging-1a6fa",
-    appId: "1:818981624218:web:742245211ed05944dec223"
+    apiKey: "AIzaSyDC8TBV5wqf2DX9jRblHmZEnv69l6IPr3c",
+    authDomain: "imageedit-498605.firebaseapp.com",
+    projectId: "imageedit-498605",
+    appId: "1:931055668161:web:3a68b7b7f2e63a6b357d40"
 });
 
 
