@@ -7,6 +7,9 @@ from firebase_admin import messaging
 from app.routes.notification import devices
 
 
+from firebase_admin import messaging
+from app.routes.notification import devices
+
 
 class TTSService:
 
@@ -18,7 +21,11 @@ class TTSService:
     ):
 
         print("Dispatch ward:", ward, flush=True)
-        print("Registered devices:", devices, flush=True)
+        print(
+            "Registered devices:",
+            devices,
+            flush=True
+        )
 
         for device in devices:
 
@@ -28,24 +35,30 @@ class TTSService:
             )
 
             if device["ward"] == ward:
-
-                print("Matched device!", flush=True)
+                print(
+                    "Matched device!",
+                    flush=True
+                )
 
                 notification = messaging.Message(
                     notification=messaging.Notification(
                         title="🚨 AQI Alert",
                         body=message
                     ),
+
                     data={
                         "audioUrl": audio_url,
                         "ward": ward
                     },
                     token=device["token"]
                 )
-
                 result = messaging.send(notification)
-                print(result, flush=True)
-
+                print(
+                    "FCM Result:",
+                    result,
+                    flush=True
+                )
+   
     def generate_audio(self, text, language):
         client = texttospeech.TextToSpeechClient()
         language_map = {
