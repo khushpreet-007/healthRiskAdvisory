@@ -2,7 +2,7 @@ from google.cloud import texttospeech
 import uuid
 import os
 from firebase_admin import messaging
-
+from app.routes.notification import devices
 
 class TTSService:
 
