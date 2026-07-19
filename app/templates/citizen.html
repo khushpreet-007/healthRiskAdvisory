@@ -1,100 +1,158 @@
-<select id="ward">
-    <option value="Kempegowda Ward" selected>Kempegowda Ward</option>
-    <option value="Basaveshwara Nagar">Basaveshwara Nagar</option>
-</select>
+<!DOCTYPE html>
+<html>
 
-<script type="module">
+<head>
+    <title>Citizen Health Advisory App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="/static/css/citizen.css">
+</head>
 
-    import { initializeApp }
-        from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+<body>
 
-    import {
-        getMessaging,
-        getToken,
-        onMessage
-    }
-        from "https://www.gstatic.com/firebasejs/12.16.0/firebase-messaging.js";
+    <h1>Citizen Health Advisory</h1>
 
+    <label>Ward</label>
+    <select id="ward">
+        <option value="Kempegowda Ward" selected>Kempegowda Ward</option>
+        <option value="Basaveshwara Nagar">Basaveshwara Nagar</option>
+    </select>
 
-    // Firebase configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyDC8TBV5wqf2DX9jRblHmZEnv69l6IPr3c",
-        authDomain: "imageedit-498605.firebaseapp.com",
-        projectId: "imageedit-498605",
-        storageBucket: "imageedit-498605.firebasestorage.app",
-        messagingSenderId: "931055668161",
-        appId: "1:931055668161:web:3a68b7b7f2e63a6b357d40"
-    };
+    <label>Role</label>
+    <select id="role">
+        <option value="elderly">Elderly</option>
+        <option value="citizen">Citizen</option>
+        <option value="student">Student</option>
+    </select>
 
+    <div id="status" class="status">
+        🟢 Connected to Emergency Alerts
+    </div>
 
+    <div id="alert-card" class="card">
+        <h2>Latest Alert</h2>
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
+        <p>No alerts received yet.</p>
 
-    // Initialize Messaging
-    const messaging = getMessaging(app);
+        <button id="playBtn" style="display:none;">
+            🔊 Play Voice Advisory
+        </button>
+    </div>
 
+    <script type="module">
 
-    if ("serviceWorker" in navigator) {
+        import { initializeApp }
+            from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 
-
-        navigator.serviceWorker.register(
-            "/static/firebase-messaging-sw.js"
-        )
-            .then((registration) => {
-
-                console.log(
-                    "Service worker ready"
-                );
-
-
-                return getToken(messaging, {
-                    vapidKey: "BHY9nOF28Gtn92OpQhzZa-LJZEUQd7OY1zsOO06R7V5LwsU0IBg3z7Gg1ARxg4DZZwO2e36epB0bhN7aQyI4XBA",
-                    serviceWorkerRegistration: registration
-                });
-
-
-            })
-            .then(token => {
-
-                if (!token) {
-                    console.error("No FCM token received.");
-                    return;
-                }
-
-                console.log("FCM TOKEN:", token);
-                const ward = document.getElementById("ward").value;
-                return fetch("/api/register-device", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        token,
-                        ward,
-                        role: "elderly"
-                    })
-                });
-
-            })
-            .then(response => response?.json())
-            .then(data => {
-                if (data) {
-                    console.log("Device registered:", data);
-                }
-            })
-            .catch(console.error);
-
-    }
-
-    // Receive foreground notifications
-    onMessage(
-        messaging,
-        payload => {
-            console.log(payload);
-            const audioUrl = payload.data.audioUrl;
-            const audio = new Audio(audioUrl);
-            audio.play();
+        import {
+            getMessaging,
+            getToken,
+            onMessage
         }
-    );
-</script>
+            from "https://www.gstatic.com/firebasejs/12.16.0/firebase-messaging.js";
+
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDC8TBV5wqf2DX9jRblHmZEnv69l6IPr3c",
+            authDomain: "imageedit-498605.firebaseapp.com",
+            projectId: "imageedit-498605",
+            storageBucket: "imageedit-498605.firebasestorage.app",
+            messagingSenderId: "931055668161",
+            appId: "1:931055668161:web:3a68b7b7f2e63a6b357d40"
+        };
+
+
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        // Initialize Messaging
+        const messaging = getMessaging(app);
+
+
+        if ("serviceWorker" in navigator) {
+
+
+            navigator.serviceWorker.register(
+                "/static/firebase-messaging-sw.js"
+            )
+                .then((registration) => {
+
+                    console.log(
+                        "Service worker ready"
+                    );
+
+
+                    return getToken(messaging, {
+                        vapidKey: "BHY9nOF28Gtn92OpQhzZa-LJZEUQd7OY1zsOO06R7V5LwsU0IBg3z7Gg1ARxg4DZZwO2e36epB0bhN7aQyI4XBA",
+                        serviceWorkerRegistration: registration
+                    });
+
+
+                })
+                .then(token => {
+
+                    if (!token) {
+                        console.error("No FCM token received.");
+                        return;
+                    }
+
+                    console.log("FCM TOKEN:", token);
+                    const ward = document.getElementById("ward").value;
+                    const role = document.getElementById("role").value;
+                    return fetch("/api/register-device", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            token,
+                            ward,
+                            role
+                        })
+                    });
+
+                })
+                .then(response => response?.json())
+                .then(data => {
+                    if (data) {
+                        console.log("Device registered:", data);
+                    }
+                })
+                .catch(console.error);
+
+        }
+        let latestAudio = null;
+        // Receive foreground notifications
+        onMessage(messaging, payload => {
+
+            console.log(payload);
+
+            latestAudio = payload.data.audioUrl;
+
+            document.getElementById("alert-card").innerHTML = `
+        <h2>🚨 AQI Alert</h2>
+
+        <p>${payload.notification.body}</p>
+
+        <button id="playBtn">
+            🔊 Play Voice Advisory
+        </button>
+    `;
+
+            document
+                .getElementById("playBtn")
+                .addEventListener("click", () => {
+
+                    new Audio(latestAudio).play();
+
+                });
+
+        });
+    </script>
+
+</body>
+
+</html>
