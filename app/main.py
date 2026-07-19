@@ -18,3 +18,7 @@ async def home():
 @app.get("/citizen")
 async def citizen():
     return FileResponse("app/templates/citizen.html")
+
+@app.get("/firebase-messaging-sw.js")
+async def firebase_sw():
+    return FileResponse("app/firebase-messaging-sw.js")
