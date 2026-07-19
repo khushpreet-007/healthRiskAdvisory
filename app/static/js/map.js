@@ -33,14 +33,7 @@ const dummyWard = {
 };
 let selectedWard = null;
 const sidebar = document.getElementById("sidebar");
-document
-.getElementById("ward")
-.addEventListener(
-"change",
-()=>{
-    document.getElementById("status").innerHTML =
-    "🟡 Ward changed. Register again";
-});
+
 
 fetch("/static/geojson/bengaluru_wards.geojson")
     .then(response => response.json())
