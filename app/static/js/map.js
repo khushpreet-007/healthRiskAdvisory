@@ -264,43 +264,42 @@ function dispatchAdvisory() {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            selectedWard,
+            ...selectedWard,
             language: language
         })
-            .then(response => {
+    })
+    .then(response => {
 
-                if (!response.ok) {
-                    throw new Error("Failed to dispatch advisory.");
-                }
+        if (!response.ok) {
+            throw new Error("Failed to dispatch advisory.");
+        }
 
-                return response.json();
-            })
-            .then(data => {
+        return response.json();
 
-                console.log(data);
+    })
+    .then(data => {
 
-                // For now just show the translated advisory
-                const audio = new Audio(data.audioUrl);
-                alert('Dispatch send Successfully 🟢');
-                //  audio.play();
+        console.log(data);
 
-                // Later we'll replace this with:
-                // const audio = new Audio(data.audioUrl);
-                // audio.play();
+        alert("Dispatch sent successfully 🟢");
 
-            })
-            .catch(error => {
+        // Optional
+        // const audio = new Audio(data.audioUrl);
+        // audio.play();
 
-                console.error(error);
+    })
+    .catch(error => {
 
-                alert("Unable to dispatch advisory.");
+        console.error(error);
 
-            })
-            .finally(() => {
+        alert("Unable to dispatch advisory.");
 
-                button.disabled = false;
-                button.innerText = "📢 Dispatch Advisory";
+    })
+    .finally(() => {
 
-            });
+        button.disabled = false;
+        button.innerText = "📢 Dispatch Advisory";
 
-    }
+    });
+
+}
