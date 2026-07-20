@@ -188,10 +188,11 @@ fetch("/static/geojson/bengaluru_wards.geojson")
 
                                 <h3>🛠 One-Click Interventions</h3>
 
-                                <select id="language">
-                                    <option value="English" selected>English</option>
+                                <select id="language" class="language-select">
+                                    <option value="English">English</option>
                                     <option value="Hindi">Hindi</option>
                                     <option value="Kannada">Kannada</option>
+                                    <option value="Tamil">Tamil</option>
                                 </select>
                                 <button id="dispatch-btn">
                                     📢 Dispatch Advisory
@@ -258,38 +259,38 @@ function dispatchAdvisory() {
             language: language
         })
     })
-    .then(response => {
+        .then(response => {
 
-        if (!response.ok) {
-            throw new Error("Failed to dispatch advisory.");
-        }
+            if (!response.ok) {
+                throw new Error("Failed to dispatch advisory.");
+            }
 
-        return response.json();
+            return response.json();
 
-    })
-    .then(data => {
+        })
+        .then(data => {
 
-        console.log(data);
+            console.log(data);
 
-        alert("Dispatch sent successfully 🟢");
+            alert("Dispatch sent successfully 🟢");
 
-        // Optional
-        // const audio = new Audio(data.audioUrl);
-        // audio.play();
+            // Optional
+            // const audio = new Audio(data.audioUrl);
+            // audio.play();
 
-    })
-    .catch(error => {
+        })
+        .catch(error => {
 
-        console.error(error);
+            console.error(error);
 
-        alert("Unable to dispatch advisory.");
+            alert("Unable to dispatch advisory.");
 
-    })
-    .finally(() => {
+        })
+        .finally(() => {
 
-        button.disabled = false;
-        button.innerText = "📢 Dispatch Advisory";
+            button.disabled = false;
+            button.innerText = "📢 Dispatch Advisory";
 
-    });
+        });
 
 }
