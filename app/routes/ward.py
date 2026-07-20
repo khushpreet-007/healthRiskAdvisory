@@ -5,6 +5,8 @@ import json
 import random
 from pathlib import Path
 
+router = APIRouter()   
+
 OPENWEATHER_KEY = os.getenv("OPENWEATHER_API_KEY")
 
 AQI_MAPPING = {
