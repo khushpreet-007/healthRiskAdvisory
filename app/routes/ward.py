@@ -38,45 +38,25 @@ with open(GEOJSON_FILE) as f:
 print(f"Loaded {len(WARD_DATA)} wards", flush=True)
 
 
-
-def pm25_to_aqi(pm25):
-
-    breakpoints = [
-        (0.0, 12.0, 0, 50),
-        (12.1, 35.4, 51, 100),
-        (35.5, 55.4, 101, 150),
-        (55.5, 150.4, 151, 200),
-        (150.5, 250.4, 201, 300),
-        (250.5, 350.4, 301, 400),
-        (350.5, 500.4, 401, 500)
-    ]
-
-    for c_low, c_high, i_low, i_high in breakpoints:
-
-        if c_low <= pm25 <= c_high:
-
-            return round(
-                ((i_high - i_low) / (c_high - c_low))
-                * (pm25 - c_low)
-                + i_low
-            )
-
-    return 500
-
 def get_aqi(lat, lon):
 
     url = (
-        f"https://api.openweathermap.org/data/2.5/air_pollution"
-        f"?lat={lat}&lon={lon}&appid={OPENWEATHER_KEY}"
+        f"https://api.waqi.info/feed/geo:{lat};{lon}/"
+        f"?token={OPENWEATHER_KEY}"
     )
 
     response = requests.get(url)
 
+    if response.status_code != 200:
+        return 0
+
     data = response.json()
 
-    pm25 = data["list"][0]["components"]["pm2_5"]
+    if data["status"] != "ok":
+        print(data)
+        return 0
 
-    return pm25_to_aqi(pm25)
+    return data["data"]["aqi"]
 
 @router.get("/api/ward/{ward_name}")
 async def get_ward_data(ward_name: str):
