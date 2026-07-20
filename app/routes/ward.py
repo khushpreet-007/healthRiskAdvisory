@@ -43,6 +43,26 @@ with open(GEOJSON_FILE) as f:
 
 print(f"Loaded {len(WARD_DATA)} wards", flush=True)
 
+import requests
+
+def get_aqi(lat, lon):
+
+    url = (
+        f"https://api.openweathermap.org/data/2.5/air_pollution"
+        f"?lat={lat}&lon={lon}&appid={OPENWEATHER_KEY}"
+    )
+
+    response = requests.get(url)
+
+    if response.status_code != 200:
+        return 0
+
+    data = response.json()
+
+    aqi_level = data["list"][0]["main"]["aqi"]
+
+    return AQI_MAPPING.get(aqi_level, 0)
+    
 @router.get("/api/ward/{ward_name}")
 async def get_ward_data(ward_name: str):
 
