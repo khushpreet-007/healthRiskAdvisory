@@ -7,3 +7,4 @@ jinja2
 python-dotenv
 requests
 firebase-admin
+shapely
