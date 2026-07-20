@@ -10,12 +10,8 @@ async function registerDevice(){
     }
 
 
-    const ward =
-        document.getElementById("ward").value;
-
-
-    const role =
-        document.getElementById("role").value;
+    const ward =  document.getElementById("ward").value;
+    const role =  document.getElementById("role").value;
 
 
     const response = await fetch(

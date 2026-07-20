@@ -49,8 +49,17 @@ body {
     margin: 15px 0;
 }
 
+
 .high {
     background: #e53935;
+}
+
+.medium {
+    background: #fb8c00;
+}
+
+.low {
+    background: #43a047;
 }
 
 button {

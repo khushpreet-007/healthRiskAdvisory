@@ -63,7 +63,6 @@ fetch("/static/geojson/bengaluru_wards.geojson")
                         .then(response => response.json())
                         .then(wardData => {
 
-
                             // Step 2: Generate AI risk
                             return fetch("/api/generate-risk-summary", {
 
@@ -74,15 +73,10 @@ fetch("/static/geojson/bengaluru_wards.geojson")
                                 },
 
                                 body: JSON.stringify({
-
                                     wardName: wardName,
-
                                     aqi: wardData.aqi,
-
                                     schools: wardData.schools,
-
                                     hospitals: wardData.hospitals,
-
                                     elderly: wardData.elderly
 
                                 })
