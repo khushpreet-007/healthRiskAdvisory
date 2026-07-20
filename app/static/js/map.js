@@ -27,6 +27,7 @@ function getColor(risk) {
 
 let selectedWard = null;
 const sidebar = document.getElementById("sidebar");
+const language = document.getElementById("language").value;
 
 fetch("/static/geojson/bengaluru_wards.geojson")
     .then(response => response.json())
@@ -96,7 +97,7 @@ fetch("/static/geojson/bengaluru_wards.geojson")
 
                                         targetAudience: riskSummary.targetAudience,
 
-                                        language: "English"
+                                        language: language
 
                                     };
 
@@ -199,7 +200,11 @@ fetch("/static/geojson/bengaluru_wards.geojson")
                                     🚦 Redirect Traffic
                                 </button>
 
-
+                                <select id="language">
+                                    <option value="English" selected>English</option>
+                                    <option value="Hindi">Hindi</option>
+                                    <option value="Kannada">Kannada</option>
+                                </select>
                                 <button id="dispatch-btn">
                                     📢 Dispatch Advisory
                                 </button>
