@@ -27,7 +27,6 @@ function getColor(risk) {
 
 let selectedWard = null;
 const sidebar = document.getElementById("sidebar");
-const language = document.getElementById("language").value;
 
 fetch("/static/geojson/bengaluru_wards.geojson")
     .then(response => response.json())
@@ -97,7 +96,6 @@ fetch("/static/geojson/bengaluru_wards.geojson")
 
                                         targetAudience: riskSummary.targetAudience,
 
-                                        language: language
 
                                     };
 
@@ -255,6 +253,7 @@ function dispatchAdvisory() {
     }
 
     const button = document.getElementById("dispatch-btn");
+    const language = document.getElementById("language").value;
 
     button.disabled = true;
     button.innerText = "⏳ Dispatching...";
@@ -264,42 +263,44 @@ function dispatchAdvisory() {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(selectedWard)
-    })
-        .then(response => {
-
-            if (!response.ok) {
-                throw new Error("Failed to dispatch advisory.");
-            }
-
-            return response.json();
+        body: JSON.stringify({
+            selectedWard,
+            language: language
         })
-        .then(data => {
+            .then(response => {
 
-            console.log(data);
+                if (!response.ok) {
+                    throw new Error("Failed to dispatch advisory.");
+                }
 
-            // For now just show the translated advisory
-            const audio = new Audio(data.audioUrl);
-            alert('Dispatch send Successfully 🟢');
-            //  audio.play();
+                return response.json();
+            })
+            .then(data => {
 
-            // Later we'll replace this with:
-            // const audio = new Audio(data.audioUrl);
-            // audio.play();
+                console.log(data);
 
-        })
-        .catch(error => {
+                // For now just show the translated advisory
+                const audio = new Audio(data.audioUrl);
+                alert('Dispatch send Successfully 🟢');
+                //  audio.play();
 
-            console.error(error);
+                // Later we'll replace this with:
+                // const audio = new Audio(data.audioUrl);
+                // audio.play();
 
-            alert("Unable to dispatch advisory.");
+            })
+            .catch(error => {
 
-        })
-        .finally(() => {
+                console.error(error);
 
-            button.disabled = false;
-            button.innerText = "📢 Dispatch Advisory";
+                alert("Unable to dispatch advisory.");
 
-        });
+            })
+            .finally(() => {
 
-}
+                button.disabled = false;
+                button.innerText = "📢 Dispatch Advisory";
+
+            });
+
+    }
