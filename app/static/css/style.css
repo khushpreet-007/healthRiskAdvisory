@@ -77,3 +77,18 @@ button {
 button:hover {
     opacity: 0.9;
 }
+.language-select {
+    width: 100%;
+    padding: 10px 12px;
+    margin: 10px 0 15px;
+    border: 1px solid #d0d7de;
+    border-radius: 8px;
+    background: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.language-select:focus {
+    outline: none;
+    border-color: #1976d2;
+}

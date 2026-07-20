@@ -188,16 +188,6 @@ fetch("/static/geojson/bengaluru_wards.geojson")
 
                                 <h3>🛠 One-Click Interventions</h3>
 
-
-                                <button>
-                                    🚧 Halt Construction
-                                </button>
-
-
-                                <button>
-                                    🚦 Redirect Traffic
-                                </button>
-
                                 <select id="language">
                                     <option value="English" selected>English</option>
                                     <option value="Hindi">Hindi</option>
