@@ -5,18 +5,12 @@ import json
 import random
 from pathlib import Path
 from fastapi import APIRouter
+import requests
+
 
 router = APIRouter()   
 
 OPENWEATHER_KEY = os.getenv("OPENWEATHER_API_KEY")
-
-AQI_MAPPING = {
-    1: 35,
-    2: 75,
-    3: 120,
-    4: 185,
-    5: 300
-}
 WARD_DATA = {}
 
 
@@ -43,7 +37,31 @@ with open(GEOJSON_FILE) as f:
 
 print(f"Loaded {len(WARD_DATA)} wards", flush=True)
 
-import requests
+
+
+def pm25_to_aqi(pm25):
+
+    breakpoints = [
+        (0.0, 12.0, 0, 50),
+        (12.1, 35.4, 51, 100),
+        (35.5, 55.4, 101, 150),
+        (55.5, 150.4, 151, 200),
+        (150.5, 250.4, 201, 300),
+        (250.5, 350.4, 301, 400),
+        (350.5, 500.4, 401, 500)
+    ]
+
+    for c_low, c_high, i_low, i_high in breakpoints:
+
+        if c_low <= pm25 <= c_high:
+
+            return round(
+                ((i_high - i_low) / (c_high - c_low))
+                * (pm25 - c_low)
+                + i_low
+            )
+
+    return 500
 
 def get_aqi(lat, lon):
 
@@ -54,15 +72,12 @@ def get_aqi(lat, lon):
 
     response = requests.get(url)
 
-    if response.status_code != 200:
-        return 0
-
     data = response.json()
 
-    aqi_level = data["list"][0]["main"]["aqi"]
+    pm25 = data["list"][0]["components"]["pm2_5"]
 
-    return AQI_MAPPING.get(aqi_level, 0)
-    
+    return pm25_to_aqi(pm25)
+
 @router.get("/api/ward/{ward_name}")
 async def get_ward_data(ward_name: str):
 

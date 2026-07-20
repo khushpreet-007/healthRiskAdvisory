@@ -1,6 +1,21 @@
 let fcmToken = null;
 let latestAudio = null;
 
+ function resetRegistrationState() {
+
+            document.getElementById("status").innerHTML =
+                "🟡 Selection changed. Register again";
+
+            document.getElementById("alert-card").innerHTML = `
+            <h2>Latest Alert</h2>
+            <p>No alerts received yet.</p>
+
+            <button id="playBtn" style="display:none;">
+                🔊 Play Voice Advisory
+            </button>
+        `;
+        }
+
 
 async function registerDevice(){
 
