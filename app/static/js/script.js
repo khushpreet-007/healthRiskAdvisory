@@ -1,4 +1,4 @@
-let fcmToken = null;
+window.fcmToken = null;
 let latestAudio = null;
 
  function resetRegistrationState() {
@@ -16,18 +16,15 @@ let latestAudio = null;
         `;
         }
 
-
 async function registerDevice(){
 
-    if(!fcmToken){
+    if(!window.fcmToken){
         alert("Please wait, notification setup is not completed");
         return;
     }
 
-
-    const ward =  document.getElementById("ward").value;
-    const role =  document.getElementById("role").value;
-
+    const ward = document.getElementById("ward").value;
+    const role = document.getElementById("role").value;
 
     const response = await fetch(
         "/api/register-device",
@@ -37,21 +34,17 @@ async function registerDevice(){
                 "Content-Type":"application/json"
             },
             body:JSON.stringify({
-                token:fcmToken,
+                token:window.fcmToken,
                 ward:ward,
                 role:role
             })
         }
     );
 
-
     const data = await response.json();
-
 
     console.log(data);
 
-
     document.getElementById("status").innerHTML =
-        "🟢 Registered for "+ward+" alerts";
-
+        "🟢 Registered for " + ward + " alerts";
 }
