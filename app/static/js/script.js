@@ -1,50 +1,60 @@
-window.fcmToken = null;
-let latestAudio = null;
+console.log("Firebase service worker loaded");
 
- function resetRegistrationState() {
+self.addEventListener("install", () => {
+    console.log("Firebase service worker installed");
+});
 
-            document.getElementById("status").innerHTML =
-                "🟡 Selection changed. Register again";
+self.addEventListener("activate", () => {
+    console.log("Firebase service worker activated");
+});
 
-            document.getElementById("alert-card").innerHTML = `
-            <h2>Latest Alert</h2>
-            <p>No alerts received yet.</p>
+// window.fcmToken = null;
+// let latestAudio = null;
 
-            <button id="playBtn" style="display:none;">
-                🔊 Play Voice Advisory
-            </button>
-        `;
-        }
+//  function resetRegistrationState() {
 
-async function registerDevice(){
+//             document.getElementById("status").innerHTML =
+//                 "🟡 Selection changed. Register again";
 
-    if(!window.fcmToken){
-        alert("Please wait, notification setup is not completed");
-        return;
-    }
+//             document.getElementById("alert-card").innerHTML = `
+//             <h2>Latest Alert</h2>
+//             <p>No alerts received yet.</p>
 
-    const ward = document.getElementById("ward").value;
-    const role = document.getElementById("role").value;
+//             <button id="playBtn" style="display:none;">
+//                 🔊 Play Voice Advisory
+//             </button>
+//         `;
+//         }
 
-    const response = await fetch(
-        "/api/register-device",
-        {
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify({
-                token:window.fcmToken,
-                ward:ward,
-                role:role
-            })
-        }
-    );
+// async function registerDevice(){
 
-    const data = await response.json();
+//     if(!window.fcmToken){
+//         alert("Please wait, notification setup is not completed");
+//         return;
+//     }
 
-    console.log(data);
+//     const ward = document.getElementById("ward").value;
+//     const role = document.getElementById("role").value;
 
-    document.getElementById("status").innerHTML =
-        "🟢 Registered for " + ward + " alerts";
-}
+//     const response = await fetch(
+//         "/api/register-device",
+//         {
+//             method:"POST",
+//             headers:{
+//                 "Content-Type":"application/json"
+//             },
+//             body:JSON.stringify({
+//                 token:window.fcmToken,
+//                 ward:ward,
+//                 role:role
+//             })
+//         }
+//     );
+
+//     const data = await response.json();
+
+//     console.log(data);
+
+//     document.getElementById("status").innerHTML =
+//         "🟢 Registered for " + ward + " alerts";
+// }
