@@ -1,60 +1,50 @@
-console.log("Firebase service worker loaded");
+window.fcmToken = null;
+let latestAudio = null;
 
-self.addEventListener("install", () => {
-    console.log("Firebase service worker installed");
-});
+ function resetRegistrationState() {
 
-self.addEventListener("activate", () => {
-    console.log("Firebase service worker activated");
-});
+            document.getElementById("status").innerHTML =
+                "🟡 Selection changed. Register again";
 
-// window.fcmToken = null;
-// let latestAudio = null;
+            document.getElementById("alert-card").innerHTML = `
+            <h2>Latest Alert</h2>
+            <p>No alerts received yet.</p>
 
-//  function resetRegistrationState() {
+            <button id="playBtn" style="display:none;">
+                🔊 Play Voice Advisory
+            </button>
+        `;
+        }
 
-//             document.getElementById("status").innerHTML =
-//                 "🟡 Selection changed. Register again";
+async function registerDevice(){
 
-//             document.getElementById("alert-card").innerHTML = `
-//             <h2>Latest Alert</h2>
-//             <p>No alerts received yet.</p>
+    if(!window.fcmToken){
+        alert("Please wait, notification setup is not completed");
+        return;
+    }
 
-//             <button id="playBtn" style="display:none;">
-//                 🔊 Play Voice Advisory
-//             </button>
-//         `;
-//         }
+    const ward = document.getElementById("ward").value;
+    const role = document.getElementById("role").value;
 
-// async function registerDevice(){
+    const response = await fetch(
+        "/api/register-device",
+        {
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+                token:window.fcmToken,
+                ward:ward,
+                role:role
+            })
+        }
+    );
 
-//     if(!window.fcmToken){
-//         alert("Please wait, notification setup is not completed");
-//         return;
-//     }
+    const data = await response.json();
 
-//     const ward = document.getElementById("ward").value;
-//     const role = document.getElementById("role").value;
+    console.log(data);
 
-//     const response = await fetch(
-//         "/api/register-device",
-//         {
-//             method:"POST",
-//             headers:{
-//                 "Content-Type":"application/json"
-//             },
-//             body:JSON.stringify({
-//                 token:window.fcmToken,
-//                 ward:ward,
-//                 role:role
-//             })
-//         }
-//     );
-
-//     const data = await response.json();
-
-//     console.log(data);
-
-//     document.getElementById("status").innerHTML =
-//         "🟢 Registered for " + ward + " alerts";
-// }
+    document.getElementById("status").innerHTML =
+        "🟢 Registered for " + ward + " alerts";
+}
